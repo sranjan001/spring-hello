@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spring-hello
+  name: spring-hello
+  namespace: sr
+spec:
+  ports:
+  - nodePort: 30008
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: spring-hello
+  type: NodePort

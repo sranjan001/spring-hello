@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spring-hello
+  name: spring-hello
+  namespace: sr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-hello
+  template:
+    metadata:
+      labels:
+        app: spring-hello
+    spec:
+      serviceAccount: satya
+      containers:
+      - image: demo.goharbor.io/satya-poc/spring-hello:0.0.1
+        name: spring-hello
