@@ -41,9 +41,17 @@
                 <configuration>
                     <image>
                         <name>${registry.projectname}/${project.artifactId}:${project.version}</name>
-<!--                        <publish>true</publish>-->
+                        <buildpacks>
+                            <buildpack>urn:cnb:builder:paketo-buildpacks/java</buildpack>
+                        </buildpacks>
+                        <runImage>${registry.projectname}/cnbs-sample-stack-run:bionic</runImage>
                     </image>
                     <docker>
+                        <builderRegistry>
+                            <username>${registry.user}</username>
+                            <password>${registry.password}</password>
+                            <url>${registry.uri}</url>
+                        </builderRegistry>
                         <publishRegistry>
                             <username>${registry.user}</username>
                             <password>${registry.password}</password>

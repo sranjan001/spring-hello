@@ -84,3 +84,14 @@ Image created with name from `pom.xml`
 ```
 
 Final image name: `spring-hello:0.0.3-SNAPSHOT`
+
+## To build stack
+cd docker
+
+docker build . -t ${registry.projectname}/cnbs-sample-stack-base:bionic --target base
+docker build . -t ${registry.projectname}/cnbs-sample-stack-build:bionic --target build
+docker build . -t ${registry.projectname}/cnbs-sample-stack-run:bionic --target run
+
+## Builder
+
+## Buildpack
