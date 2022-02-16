@@ -1,4 +1,4 @@
-## Springboot - Build container image and deploy to Kubernetes
+## Springboot - Build container image and push to container registry using Maven configuration
 
 ### Pre-requisite
 
@@ -8,14 +8,47 @@
 * Maven
 * Access to Internet
 * Access to Docker Registry (Habor used here)
-* kubectl
-* Access to K8s cluster and kubeconfig to connect to K8s cluster
 
-### Build and Create Image 
-Uses default BaseOS
+### Build, Create Image, Tag and Push to Container Registry
+
+#### Change `pom.xml`
+
+* Include container registry credentials
+* Refer [here](https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image.
+  customization) for Image customizations, like custom image tag
+
+```xml
+   <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>${registry.projectname}/${project.artifactId}:${project.version}</name>
+<!--                    <publish>true</publish>-->
+                    </image>
+                    <docker>
+                        <publishRegistry>
+                            <username>${registry.user}</username>
+                            <password>${registry.password}</password>
+                            <url>${registry.uri}</url>
+                        </publishRegistry>
+                    </docker>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
+
 
 ```
-./mvnw spring-boot:build-image
+./mvnw spring-boot:build-image \
+    -Dregistry.projectname=$REGISTRY_PROJECT_NAME  \
+    -Dregistry.user=$REGISTRY_USER \
+    -Dregistry.password=$REGISTRY_PASSWORD \
+    -Dregistry.uri=$REGISTRY_URI \
+    -Dspring-boot.build-image.publish=true
 ```
 
 * Build application and create JAR
@@ -29,7 +62,7 @@ Uses default BaseOS
     * ANALYZE
     * RESTORE
     * BUILD
-      * Paketo CA Certificates Buildpack 3.0.3 
+      * Paketo CA Certificates Buildpack 3.0.3
       * Paketo BellSoft Liberica Buildpack 9.1.0
       * BellSoft Liberica JRE 11.0.14
       * Paketo Syft Buildpack 1.7.0
@@ -40,48 +73,14 @@ Uses default BaseOS
       * Add layer
       * Add label
       * Set default process type
-BUILD SUCCESS
+  * Push image
+     BUILD SUCCESS
 
 Image created with name from `pom.xml`
 
 ```
 <artifactId>spring-hello</artifactId>
-<version>0.0.2-SNAPSHOT</version>
+<version>0.0.3-SNAPSHOT</version>
 ```
 
-Final image name: `spring-hello:0.0.2-SNAPSHOT`
-
-### Tag and Push to Container Registry
-
-```
-docker login REGISTRY-URI
-docker tag spring-hello:0.0.2-SNAPSHOT REGISTRY-PROJECT-NAME/spring-hello:latest
-docker push REGISTRY-PROJECT-NAME/spring-hello:latest
-
-## For Harbor, REGISTRY-PROJECT-NAME = REGISTRY-URI/PROJECT-NAME
-```
-
-### Prepare Kubernetes
-
-#### Create secret for container registry
-
-* Create Namespace `dev`
-* Create registry-secret. Refer [Add ImagePullSecrets to a service account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account)
-* Create Service Account `deploy-robot` and bind to the secret
-* Create Deployment include Service Account name to pod spec
-* Create NodePort Service and expose the deployment
-
-Refer [deploy.yaml](k8s/deploy.yaml)
-```
-kubectl apply -f k8s/deploy.yaml
-```
-
-* Get external IP of any worker node
-
-```
-kubectl get nodes -o wide
-```
-
-* Then test using 
-
-`curl EXTERNAL-IP:30009`
+Final image name: `spring-hello:0.0.3-SNAPSHOT`

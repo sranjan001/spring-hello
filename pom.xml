@@ -10,11 +10,15 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>spring-hello</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>spring-hello</name>
     <description>spring-hello</description>
     <properties>
         <java.version>11</java.version>
+        <registry.projectname>REPLACE-ME</registry.projectname>
+        <registry.uri>REPLACE-ME</registry.uri>
+        <registry.user>REPLACE-ME</registry.user>
+        <registry.password>REPLACE-ME</registry.password>
     </properties>
     <dependencies>
         <dependency>
@@ -34,6 +38,19 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>${registry.projectname}/${project.artifactId}:${project.version}</name>
+<!--                        <publish>true</publish>-->
+                    </image>
+                    <docker>
+                        <publishRegistry>
+                            <username>${registry.user}</username>
+                            <password>${registry.password}</password>
+                            <url>${registry.uri}</url>
+                        </publishRegistry>
+                    </docker>
+                </configuration>
             </plugin>
         </plugins>
     </build>
