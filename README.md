@@ -8,6 +8,8 @@
 * Maven
 * Access to Internet
 * Access to Docker Registry (Habor used here)
+* kubectl
+* Access to K8s cluster and kubeconfig to connect to K8s cluster
 
 ### Build and Create Image 
 Uses default BaseOS
