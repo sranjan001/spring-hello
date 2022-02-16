@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spring-hello
+  name: spring-hello
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-hello
+  template:
+    metadata:
+      labels:
+        app: spring-hello
+    spec:
+      serviceAccountName: deploy-robot
+      containers:
+      - image: REGISTRY-URI/PROJECT-NAME/spring-hello:latest
+        name: spring-hello
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spring-hello
+  name: spring-hello
+  namespace: dev
+spec:
+  ports:
+    - nodePort: 30009
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: spring-hello
+  type: NodePort

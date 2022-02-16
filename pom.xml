@@ -15,7 +15,6 @@
     <description>spring-hello</description>
     <properties>
         <java.version>11</java.version>
-        <registry_project_name>docker.io/library</registry_project_name>
     </properties>
     <dependencies>
         <dependency>
@@ -35,19 +34,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <image>
-                        <runImage>harbor-repo.vmware.com/apjappnav/ubuntu:latest</runImage>
-                        <name>${registry_project_name}/${project.artifactId}:${project.version}</name>
-                    </image>
-                    <docker>
-                        <publishRegistry>
-                            <username>${registry_user}</username>
-                            <password>${registry_password}</password>
-                            <url>${registry_uri}</url>
-                        </publishRegistry>
-                    </docker>
-                </configuration>
             </plugin>
         </plugins>
     </build>
