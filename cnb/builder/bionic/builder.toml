@@ -1,0 +1,20 @@
+# Buildpacks to include in builder
+[[buildpacks]]
+id = "samples/java-maven"
+version = "0.0.1"
+uri = "../../buildpacks/java-maven"
+
+#[[buildpacks]]
+#uri = "docker://cnbs/sample-package:hello-universe"
+
+# Order used for detection
+[[order]]
+[[order.group]]
+id = "samples/java-maven"
+version = "0.0.1"
+
+# Stack that will be used by the builder
+[stack]
+id = "io.buildpacks.samples.stacks.bionic"
+run-image = "${REGISTRY_PROJECT_NAME}/cnbs-sample-stack-run:bionic"
+build-image = "${REGISTRY_PROJECT_NAME}/cnbs-sample-stack-build:bionic"
